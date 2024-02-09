@@ -1,0 +1,85 @@
+<html>
+<head>
+    <title>weather realm</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="text_field">
+        <div class="inputer">
+            <input type="text" placeholder="Enter the city name ">
+            <button id="btn_srg"> <i class="fa fa-search"></i></button>
+        </div>
+        <div class="error">
+            <p> invalid city name</p>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" alt="rain image" class="weather-icon">
+            <h1 class="temp">17°C </h1>
+            <h2 class="city">sydney</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png" alt="humidity image">
+                    <div> 
+                        <p class="humidity">74%</p>
+                        <p>humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="wind image">
+                    <div> 
+                        <p class="wind">4.63 km/h</p>
+                        <p>wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        <script>
+            const apikey = "ed75bc243e67c8a978af4a26b37d179a";
+            const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+            const weathericon = document.querySelector(".weather-icon");
+            const searchbox = document.querySelector(".inputer input");
+            const searchbtn = document.querySelector("#btn_srg"); // Corrected: Use the correct button selector
+                
+            async function checkweather(city) {
+                const response = await fetch(apiurl + city + `&appid=${apikey}`);
+                if(response.status==404){
+                    document.querySelector(".error").style.display="block";
+                    document.querySelector(".weather").style.display="none";
+                }else{const data = await response.json();
+                console.log(data);
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C"; // Corrected: Use Math.round
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+            if(data.weather[0].main =="Clouds"){
+                weathericon.src="images/clouds.png";
+            }
+            else if(data.weather[0].main =="Clear"){
+                weathericon.src="images/clear.png";
+            }
+            else if(data.weather[0].main =="Rain"){
+                weathericon.src="images/rain.png";
+            }
+            else if(data.weather[0].main =="Drizzle"){
+                weathericon.src="images/drizzle.png";
+            }
+            else if(data.weather[0].main =="Mist"){
+                weathericon.src="images/mist.png";
+            }
+            document.querySelector(".weather").style.display="block";
+            document.querySelector(".error").style.display="none";
+        }
+                    
+    } 
+
+            // Corrected: Use searchbtn instead of reassigning it
+            searchbtn.addEventListener("click", () => {
+                checkweather(searchbox.value);
+            });
+        </script>
+    </body>
+</html>
+
+    <!-- https://api.openweathermap.org/data/2.5/weather?q=villupuram&appid=ed75bc243e67c8a978af4a26b37d179a&units=metric -->
